@@ -1,0 +1,4 @@
+1) Structuri algebrice multisortate
+2) Logica ecuationala
+3) Rescriere
+4) Programare logica ecuationala

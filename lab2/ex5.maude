@@ -1,0 +1,20 @@
+fmod DATA-CALENDARISTICA is
+  protecting INT .
+  sort Date .
+  
+  op date : Int Int Int -> Date .
+  op valid : Date -> Bool .
+  
+  var A B C : Int .
+  
+  ceq valid(date(A, B, C)) = true if ((A <= 28) and (B <= 12)) .
+  ceq valid(date(A, B, C)) = false if ((A > 31) or (B > 12)) .
+  ceq valid(date(A, B, C)) = false if ((A < 1) or (B < 1)) .
+  ceq valid(date(A, B, C)) = true if ((A <= 31) and (((B == 1 or B == 3) or ((B == 5 or B == 7) or (B == 8 or B == 10))) or B == 12)) .
+  ceq valid(date(A, B, C)) = false if ((A > 31) and (((B == 1 or B == 3) or ((B == 5 or B == 7) or (B == 8 or B == 10))) or B == 12)) .
+  ceq valid(date(A, B, C)) = true if ((A < 31) and (B == 4 or B == 6 or B == 9 or B == 11)) .
+  ceq valid(date(A, B, C)) = false if ((A >= 31) and (B == 4 or B == 6 or B == 9 or B == 11)) .
+  ceq valid(date(A, B, C)) = true if ((A <= 28) and (B == 2)) .
+  ceq valid(date(A, B, C)) = false if (((A > 28) and (B == 2)) and not ( gcd( C, 4) == 4 and ( not (gcd(C, 400) == 400))) ).
+  ceq valid(date(A, B, C)) = true if ((A == 29 ) and (B == 2) and ( gcd( C, 4) == 4 and ( not (gcd(C, 400) == 400)))) .
+endfm

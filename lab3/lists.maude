@@ -1,0 +1,63 @@
+--- fmod LIST-INT1 is
+---   protecting INT .
+---   sorts NList List .
+---   subsort NList < List .
+---   op nil : -> List .
+---   op _ _ : Int List -> NList .
+--- endfm
+
+fmod LIST-INT2 is
+  protecting INT .
+  sorts NList List .
+  subsort Int < NList < List .
+  op nil : -> List .
+  op _ _ : Int List -> NList [id: nil] .
+  
+  op _in_ : Int NList -> Bool .
+  op append : List List -> List .
+  op rev : List -> List .
+  
+  op lower : Int List -> List .
+  op upper : Int List -> List .
+  op srt : List -> List .
+  
+  var I J : Int .
+  var L K : List .
+  
+  eq I in nil = false .
+  eq I in J L = (I == J) or (I in L) .
+  
+  eq append(nil, L) = L .
+  eq append(I L, K) = I append(L, K) .
+  
+  eq rev(nil) = nil .
+  eq rev(I L) = append(rev(L), I) .
+  
+  eq lower(I, nil) = nil .
+  ceq lower(I, J L) = J lower(I, L) if (J <= I) .
+  ceq lower(I, J L) = lower(I, L) if (J > I) .
+  
+  eq upper(I, nil) = nil .
+  ceq upper(I, J L) = J upper(I, L) if (J > I) .
+  ceq upper(I, J L) = upper(I, L) if (J <= I) .
+  
+  eq srt(nil) = nil .
+  eq srt(I L) = append(srt(lower(I, L)), I srt(upper(I, L))) .
+endfm
+
+--- fmod LIST-INT3 is
+---   protecting INT .
+---   sort List .
+---   subsort Int < List .
+---   op nil : -> List .
+---   op _ _ : List List -> List [assoc id: nil] .
+--- endfm
+
+fmod LENGTH is
+  protecting LIST-INT2 .
+  op length : List -> Nat .
+  var I : Int .
+  var L : List .
+  eq length(nil) = 0 .
+  eq length(I L) = 1 + length(L) .
+endfm

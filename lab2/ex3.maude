@@ -1,0 +1,18 @@
+fmod MYRAT is
+  protecting INT .
+  sort Rat .
+  subsort Int < Rat .
+  op _Pe_ : Int NzInt -> Rat .
+  op fIr : Rat -> Rat .
+  op _plus_ : Rat Rat -> Rat .
+  op _ori_ : Rat Rat -> Rat .
+  
+  var A C : Int .
+  var B D : NzInt .
+  eq A Pe 1 = A .
+  
+  eq fIr(A Pe B) = (A quo gcd(B, A)) Pe (B quo gcd(B, A)) .
+  
+  eq ((A Pe B) plus (C Pe D)) = fIr((A * D + B * C) Pe (B * D)) .
+  eq ((A Pe B) ori (C Pe D)) = fIr((A * C) Pe (B * D)) .
+endfm

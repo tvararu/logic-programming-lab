@@ -1,0 +1,57 @@
+--- fmod MYNAT-SIMPLE is
+---   sort Nat .
+---   op 0 : -> Nat .
+---   op s_ : Nat -> Nat .
+---   op _+_ : Nat Nat -> Nat [assoc comm prec 33] .
+---   vars N M : Nat .
+---   eq 0 + M = M .
+---   eq s N + M = s(N + M) .
+--- endfm
+--- 
+--- fmod MYNAT-SIMPLE* is
+---   including MYNAT-SIMPLE .
+---   op _*_ : Nat Nat -> Nat [assoc comm prec 31] .
+---   vars M N : Nat .
+---   eq 0 * M = 0 .
+---   eq (s N) * M = (N * M) + M .
+--- endfm
+--- 
+--- fmod MYNAT is
+---   sorts Zero NzNat Nat .
+---   subsort Zero NzNat < Nat .
+---   op 0 : -> Zero .
+---   op s_ : Nat -> NzNat .
+---   op _+_ : Nat Nat -> Nat [assoc comm prec 33] .
+---   op _*_ : Nat Nat -> Nat [assoc comm prec 31] .
+---   vars N M : Nat .
+---   eq 0 + M = M .
+---   eq s(N) + M = s(N + M) .
+---   eq 0 * M = 0 .
+---   eq s(N) * M = (N * M) + M .
+--- endfm
+
+fmod MYINT is
+  sort Int .
+  op 0 : -> Int .
+  op s_ : Int -> Int .
+  op p_ : Int -> Int .
+  op _+_ : Int Int -> Int [assoc comm prec 33] .
+  op _-_ : Int Int -> Int [prec 33] .
+  op _*_ : Int Int -> Int [assoc comm prec 31] .
+  
+  vars N M : Int .
+  eq 0 + M = M .
+  eq s p N = N .
+  eq p s N = N .
+  
+  eq s(N) + M = s(N + M) .
+  eq p(N) + M = p(N + M) .
+  
+  eq N - 0 = N .
+  eq N - s M = p (N - M) .
+  eq N - p M = s (N - M) .
+  
+  eq 0 * M = 0 .
+  eq s(N) * M = (N * M) + M .
+  eq p(N) * M = (N * M) - M .
+endfm

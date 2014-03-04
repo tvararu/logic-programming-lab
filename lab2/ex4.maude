@@ -1,0 +1,15 @@
+fmod MYCOMP is
+  protecting INT .
+  sort Comp .
+  subsort Int < Comp .
+  op complex : Int Int -> Comp .
+  op _plus_ : Comp Comp -> Comp .
+  op _ori_ : Comp Comp -> Comp .
+  
+  var A B C D : Int .
+  eq complex(A, 0) = A .
+  
+  eq complex(A, B) plus complex(C, D) = complex(A + C, B + D) .
+  
+  eq complex(A, B) ori complex(C, D) = complex(A * C - D * B, A * D + B * C) .
+endfm

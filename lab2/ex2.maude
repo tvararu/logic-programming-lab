@@ -1,0 +1,63 @@
+fmod MYNAT is
+  sorts Zero NzNat Nat .
+  subsort Zero NzNat < Nat .
+  op 0 : -> Zero .
+  op s_ : Nat -> NzNat .
+  op p_ : Nat -> Nat .
+  
+  op _+_ : Nat Nat -> Nat [assoc comm prec 33] .
+  op _-_ : Nat Nat -> Nat [prec 33] .
+  op _*_ : Nat Nat -> Nat [assoc comm prec 31] .
+  
+  op _<_ : Nat Nat -> Bool .
+  op _>_ : Nat Nat -> Bool .
+  op _<=_ : Nat Nat -> Bool .
+  op _>=_ : Nat Nat -> Bool .
+  
+  op max : Nat Nat -> Nat .
+  op min : Nat Nat -> Nat .
+  
+  op odd : Nat -> Bool .
+  op even : Nat -> Bool .
+  
+  op cmmdc : Nat Nat -> Nat .
+  
+  vars N M : Nat .
+  eq 0 + M = M .
+  eq s(N) + M = s(N + M) .
+  eq 0 * M = 0 .
+  eq s(N) * M = (N * M) + M .
+  
+  eq p 0 = 0 .
+  eq p s M = M .
+  
+  eq (M < 0) = false .
+  ceq (M < s(N)) = true if not (N < M) .
+  ceq (M < s(N)) = false if (N < M) .
+  
+  eq (M > N) = N < M .
+  
+  eq (M <= N) = (M < N) or (M == N) .
+  
+  eq (M >= N) = (N <= M) .
+  
+  ceq max(M, N) = M if (N < M) or (M == N) .
+  ceq max(M, N) = N if (N > M) or (M == N) .
+  
+  ceq min(M, N) = N if (N < M) or (M == N) .
+  ceq min(M, N) = M if (N > M) or (M == N) .
+  
+  eq even(0) = true .
+  eq odd(0) = false .
+  eq odd(s M) = even(M) .
+  eq even(s M) = odd(M) .
+  
+  eq 0 - M = 0 .
+  eq M - 0 = M .
+  eq M - s(N) = p(M - N) .
+  
+  eq cmmdc(0, N) = N .
+  ceq cmmdc(N, M) = M if (M == N) .
+  ceq cmmdc(N, M) = cmmdc(N - M, M) if (M < N) .
+  ceq cmmdc(N, M) = cmmdc(N, M - N) if (M > N) .
+endfm
