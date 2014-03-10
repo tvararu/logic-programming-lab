@@ -1,0 +1,14 @@
+fmod LIST{X :: TRIV} is
+  sort List{X} .
+  subsort X$Elt < List{X} .
+  op nil : -> List{X} .
+  op _ _ : List{X} List{X} -> List{X} [assoc id: nil] .
+endfm
+
+view RatView from TRIV to RAT is
+  sort Elt to Rat .
+endv
+
+fmod LIST-RAT is
+  protecting LIST{RatView} .
+endfm

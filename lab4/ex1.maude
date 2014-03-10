@@ -1,0 +1,16 @@
+fth RING is
+  including TRIV .
+  ops z e : -> Elt .
+  op _ + _ : Elt Elt -> Elt [assoc id: z] .
+  op _ * _ : Elt Elt -> Elt [assoc id: e] .
+  op - _ : Elt -> Elt .
+  vars A B C : Elt .
+  eq A + (- A) = z [nonexec] .
+  eq A * (B + C) = (A * B) + (A * C) [nonexec] .
+endfth
+
+view RingToRat from RING to RAT is
+  sort Elt to Rat .
+  op e to term 1 .
+  op z to 0 .
+endv
