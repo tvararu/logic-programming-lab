@@ -1,0 +1,43 @@
+fth TOSET# is
+  including TRIV .
+  protecting BOOL .
+  op _ < _ : Elt Elt -> Bool .
+  op _ <= _ : Elt Elt -> Bool .
+endfth
+
+fmod SET{X :: TRIV} is
+  sort Set{X} .
+  subsort X$Elt < Set{X} .
+  op nil : -> Set{X} .
+  op _ _ : Set{X} Set{X} -> Set{X} [assoc comm id: nil] .
+
+  var I : X$Elt .
+  eq I I = I .
+endfm
+
+view Toset from TRIV to TOSET# is
+  sort Elt to Elt .
+endv
+
+view TosetToInt from TOSET# to INT is
+  sort Elt to Int .
+endv
+
+fmod MultimiDeIntregi is
+  protecting SET{Toset}{TosetToInt} .
+endfm
+
+fmod SET-MAX{T :: TOSET#} is
+  protecting SET{Toset}{T} .
+  op maxim : Set{Toset}{T} -> T$Elt .
+
+  var I : T$Elt .
+  var S : Set{Toset}{T} .
+  eq maxim(I) = I .
+  ceq maxim(I S) = I if (maxim(S) <= I) .
+  ceq maxim(I S) = maxim(S) if not (maxim(S) <= I) .
+endfm
+
+fmod MultimiDeIntregi is
+  protecting SET-MAX{TosetToInt} .
+endfm

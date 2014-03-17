@@ -1,0 +1,30 @@
+fth TOSET# is
+  including TRIV .
+  protecting BOOL .
+  op _ < _ : Elt Elt -> Bool .
+  op _ <= _ : Elt Elt -> Bool .
+endfth
+
+fmod PAIR{X :: TOSET#, Y :: TOSET#} is
+  sort Pair{X, Y} .
+  op pair : X$Elt Y$Elt -> Pair{X, Y} .
+  op first : Pair{X, Y} -> X$Elt .
+  op second : Pair{X, Y} -> Y$Elt .
+  op _ <= _ : Pair{X, Y} Pair{X, Y} -> Bool .
+
+  var I K : X$Elt .
+  var J L : Y$Elt .
+  eq first(pair(I, J)) = I .
+  eq second(pair(I, J)) = J .
+
+  eq pair(I, J) <= pair(K, L) = I < K or (I == K and J <= L) .
+endfm
+
+view SETVIEW from TOSET# to INT is
+  sort Elt to Int .
+endv
+
+fmod PAIR-DE-INTREGI is
+  protecting PAIR{SETVIEW, SETVIEW} .
+
+endfm

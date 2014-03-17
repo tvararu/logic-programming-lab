@@ -1,0 +1,40 @@
+fmod LIST{X :: TRIV} is
+  sort List{X} .
+  subsort X$Elt < List{X} .
+  op nil : -> List{X} .
+  op _ _ : List{X} List{X} -> List{X} [assoc id: nil] .
+endfm
+
+fmod PAIR{X :: TRIV, Y :: TRIV} is
+  sort Pair{X, Y} .
+  op pair : X$Elt Y$Elt -> Pair{X, Y} .
+  op first : Pair{X, Y} -> X$Elt .
+  op second : Pair{X, Y} -> Y$Elt .
+
+  var I : X$Elt .
+  var J : Y$Elt .
+  eq first(pair(I, J)) = I .
+  eq second(pair(I, J)) = J .
+endfm
+
+fmod PAIR-DE-INTREGI is
+  protecting PAIR{Int, Int} .
+endfm
+
+view PairView from TRIV to PAIR-DE-INTREGI is
+  sort Elt to Pair{Int, Int} .
+endv
+
+fmod LIST-PAIR is
+  protecting LIST{PairView} .
+  protecting LIST{Int} .
+  op @first : List{PairView} -> List{Int} .
+  op @second : List{PairView} -> List{Int} .
+
+  var I J : Int .
+  var K : List{PairView}  .
+  eq @first(nil) = nil .
+  eq @first(pair(I, J) K) = I @first(K) .
+  eq @second(nil) = nil .
+  eq @second(pair(I, J) K) = J @second(K) .
+endfm
