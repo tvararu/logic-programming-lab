@@ -1,0 +1,55 @@
+fth TOSET is
+  including TRIV .
+  protecting BOOL .
+  op _ < _ : Elt Elt -> Bool .
+  op _ <= _ : Elt Elt -> Bool .
+endfth
+
+fmod LIST{X :: TOSET} is
+
+  protecting INT .
+  protecting BOOL .
+
+  sorts NList{X} List{X} .
+  subsort X$Elt < NList{X} < List{X} .
+  op nil : -> List{X} .
+  op _ _ : X$Elt List{X} -> NList{X} [id: nil] .
+  op min : NList{X} -> X$Elt .
+  op scot : List{X} X$Elt -> List{X} .
+  op srt : List{X} -> List{X} .
+  op len : List{X} -> Int .
+  op _ <<< _ : List{X} List{X} -> Bool .
+
+  vars A I : X$Elt .
+  var L1 M N : List{X} .
+  vars L : NList{X} .
+  eq min(A) = A .
+  ceq min(A L) = A if A <= min(L) .
+  ceq min(A L) = min(L) if min(L) < A .
+
+  eq scot(nil,A) = nil .
+  ceq scot(A L1, I) = L1 if A == I .
+  ceq scot(A L1,I) = A scot(L1,I) if not A == I .
+
+  eq srt(L) = min(L) srt(scot(L,min(L))) .
+  eq srt(nil) = nil .
+
+  eq len(nil) = 0 .
+  eq len(A L1) = 1 + len(L1) .
+
+  eq nil <<< nil = false .
+  ceq M <<< N = true if len(M) < len(N) .
+  ceq M <<< N = false if len(N) < len(M) .
+  ceq (A M) <<< (I N) = A < I if len(M) == len(N) and not A == I . 
+  ceq (A M) <<< (I N) = M <<< N if A == I and len(M) == len(N) .
+
+endfm
+
+view nume from TOSET to INT is
+  sort Elt to Int .
+endv
+
+fmod numeMod is
+  protecting LIST{nume} .
+endfm
+

@@ -1,0 +1,36 @@
+fth TRIVconst is 
+  including TRIV .
+  op const : -> Elt .
+endfth
+
+fmod LIST{X :: TRIVconst} is
+
+  sorts NList{X} List{X} .
+  subsort X$Elt < NList{X} < List{X} .
+  op nil : -> List{X} .
+  op _ _ : X$Elt List{X} -> NList{X} [id: nil] .
+  op delete : X$Elt List{X} -> List{X} . 
+  op add : X$Elt List{X} -> List{X} .
+
+  var L : List{X} .
+  var S I : X$Elt .
+
+  eq delete(S,nil) = nil .
+  ceq delete(S,I L) = const delete(S,L) if S == I .
+  ceq delete(S,I L) = I delete(S,L) if not S == I .
+
+  eq add(S,nil) = nil .
+  ceq add(S,I L) = S add(S,L) if const == I .
+  ceq add(S,I L) = I add(S,L) if not const == I .
+
+
+endfm
+
+view numeView from TRIVconst to STRING is
+  sort Elt to String .
+  op const to term "tac tac" .
+endv
+
+fmod Nume is 
+  protecting LIST{numeView} .
+endfm
