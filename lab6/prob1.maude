@@ -6,7 +6,6 @@ fth TOSET is
 endfth
 
 fmod LIST{X :: TOSET} is
-
   protecting INT .
   protecting BOOL .
 
