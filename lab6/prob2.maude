@@ -4,7 +4,6 @@ fth TRIVconst is
 endfth
 
 fmod LIST{X :: TRIVconst} is
-
   sorts NList{X} List{X} .
   subsort X$Elt < NList{X} < List{X} .
   op nil : -> List{X} .
@@ -22,8 +21,6 @@ fmod LIST{X :: TRIVconst} is
   eq add(S,nil) = nil .
   ceq add(S,I L) = S add(S,L) if const == I .
   ceq add(S,I L) = I add(S,L) if not const == I .
-
-
 endfm
 
 view numeView from TRIVconst to STRING is
