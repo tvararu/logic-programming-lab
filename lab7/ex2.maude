@@ -1,0 +1,59 @@
+fmod MYNAT is
+  sort Nat .
+  op 0 : -> Nat .
+  op s_ : Nat -> Nat .
+  op _+_ : Nat Nat -> Nat .
+  op _*_ : Nat Nat -> Nat .
+  
+  vars N M : Nat .
+  eq N + 0 = N .
+  eq N + s M = s(N + M) .
+  
+  eq N * 0 = 0 .
+  eq N * s M = (N * M) + N .
+  
+  op _<_ : Nat Nat -> Bool .
+  eq s(N) < s(M) = N < M .
+  eq 0 < s(M) = true .
+  eq N < 0 = false .
+endfm
+
+fmod SUM-LEMMA is
+  protecting MYNAT .
+  var N M P : Nat .
+  
+  op lemma-one : Nat Nat -> Bool .
+  eq lemma-one(N, M) = s(N) + M == s(N + M) .
+  
+  op lemma-two : Nat -> Bool .
+  eq lemma-two(M) = 0 + M == M .
+  
+  op lemma-three : Nat Nat -> Bool .
+  eq lemma-three(N, M) = N + M == M + N .
+  
+  op lemma-four : Nat Nat Nat -> Bool .
+  eq lemma-four(N, M, P) = (N + M) + P == N + (M + P) .
+  
+  --- N < s N = true
+  op lemma-five : Nat -> Bool .
+  eq lemma-five(N) = N < s N .
+  
+  --- M1 + N < M2 + N = true if M1 < M2
+  op lemma-six : Nat Nat Nat -> Bool .
+  eq lemma-six(N, M, P) = M + N < P + N == M < P .
+  
+  --- M + N1 < M + N2 = true if N1 < N2
+  op lemma-seven : Nat Nat Nat -> Bool .
+  eq lemma-seven(N, M, P) = M + N < M + P == N < P .
+
+  var N1 N2 M1 M2 : Nat .
+  --- |M1 + N1| + M2 < |M1 + M2| + N2 = true if N1 < N2
+  op lemma-eight : Nat Nat Nat Nat -> Bool .
+  eq lemma-eight(N1, N2, M1, M2) = N1 < N2 implies (M1 + N1) + M2 < (M1 + M2) + N2 .
+  
+  op lemma-dumb : Nat Nat -> Bool .
+  eq lemma-dumb(N, M) = N * M == 0 .
+  
+  *** constant for proof
+  op n : -> Nat .
+endfm

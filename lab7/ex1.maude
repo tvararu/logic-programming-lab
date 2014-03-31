@@ -1,0 +1,29 @@
+fmod MYNAT is
+  sort Nat .
+  op 0 : -> Nat .
+  op s_ : Nat -> Nat .
+  op _+_ : Nat Nat -> Nat .
+  vars N M : Nat .
+  eq N + 0 = N .
+  eq N + s M = s(N + M) .
+endfm
+
+fmod SUM-LEMMA is
+  protecting MYNAT .
+  var N M P : Nat .
+  
+  op lemma-one : Nat Nat -> Bool .
+  eq lemma-one(N, M) = s(N) + M == s(N + M) .
+  
+  op lemma-two : Nat -> Bool .
+  eq lemma-two(M) = 0 + M == M .
+  
+  op lemma-three : Nat Nat -> Bool .
+  eq lemma-three(N, M) = N + M == M + N .
+  
+  op lemma-four : Nat Nat Nat -> Bool .
+  eq lemma-four(N, M, P) = (N + M) + P == N + (M + P) .
+  
+  *** constant for proof
+  op n : -> Nat .
+endfm

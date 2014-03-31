@@ -1,0 +1,16 @@
+fmod NAT-SUM is
+  protecting NAT .
+  var N : Nat .
+  op sum : Nat -> Nat .
+  eq sum(0) = 0 .
+  eq sum(s N) = sum(N) + (s N) .
+endfm
+
+fmod SUM-LEMMA is
+  protecting NAT-SUM .
+  var N : Nat .
+  op sum-lemma : Nat -> Bool .
+  eq sum-lemma(N) = (2 * sum(N) == N * (s N)) .
+  *** constant for proof
+  op n : -> Nat .
+endfm
