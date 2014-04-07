@@ -1,1 +1,1 @@
-Second year "Logic Programming" laboratory. Maude and stuff.
+Second year "Logic Programming" lab work. Maude and stuff.
