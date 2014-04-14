@@ -1,0 +1,85 @@
+fmod NAME-SYNTAX is protecting QID .
+  sort Name .
+  subsort Qid < Name .
+  ops a b c d e f g h i j k l m n
+      o p q r s t u v x y z w : -> Name .
+endfm
+
+fmod EXP-SYNTAX is protecting NAME-SYNTAX .
+  protecting INT .
+  sort Exp .
+  subsorts Int Name < Exp .
+  op _+_ : Exp Exp -> Exp [ditto] .
+  op _-_ : Exp Exp -> Exp [ditto] .
+  op _*_ : Exp Exp -> Exp [ditto] .
+  op _/_ : Exp Exp -> Exp [prec 31] .
+endfm
+
+fmod GENERIC-STMT-SYNTAX is
+  sort Stmt .
+  op skip : -> Stmt .
+endfm
+
+fmod ASSIGNMENT-SYNTAX is
+  extending GENERIC-STMT-SYNTAX .
+  protecting EXP-SYNTAX .
+  op _=_ : Name Exp -> Stmt [prec 40] .
+endfm
+
+fmod SEQ-COMP-SYNTAX is
+  protecting GENERIC-STMT-SYNTAX .
+  sort StmtList .
+  subsort Stmt < StmtList .
+  op _ _ : StmtList StmtList -> StmtList [assoc] .
+  op _;_ : StmtList StmtList -> StmtList [assoc] .
+endfm
+
+fmod BLOCK-SYNTAX is
+  extending SEQ-COMP-SYNTAX .
+  op {_} : StmtList -> Stmt .
+endfm
+
+fmod BEXP-SYNTAX is protecting EXP-SYNTAX .
+  sort BExp .
+  op _equals_ : Exp Exp -> BExp .
+  op zero? : Exp -> BExp .
+  op even? : Exp -> BExp .
+  op not_ : BExp -> BExp .
+  op _and_ : BExp BExp -> BExp .
+endfm
+
+fmod IF-SYNTAX is
+  protecting BEXP-SYNTAX .
+  extending GENERIC-STMT-SYNTAX .
+  op if_then_else_ : BExp Stmt Stmt -> Stmt .
+endfm
+
+
+fmod LOOPS-SYNTAX is
+  extending BEXP-SYNTAX .
+  extending GENERIC-STMT-SYNTAX .
+  op for(_;_;_)_ : Stmt BExp Stmt Stmt -> Stmt .
+  op while__ : BExp Stmt -> Stmt .
+endfm
+
+
+fmod PROG-LANG-SYNTAX is
+  extending ASSIGNMENT-SYNTAX .
+  extending BLOCK-SYNTAX .
+  extending IF-SYNTAX .
+  extending LOOPS-SYNTAX .
+  sort Pgm .
+  op __ : StmtList Exp -> Pgm .
+  op _;_ : StmtList Exp -> Pgm .
+endfm
+
+parse
+  x = 17 ;
+  y = 100 ;
+  p = 1 ;
+  for(i = y ; not zero?(i) ; i = i - 1) {
+    p = p * x
+  }
+  p
+.
+
