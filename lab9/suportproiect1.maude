@@ -62,7 +62,6 @@ fmod LOOPS-SYNTAX is
   op while__ : BExp Stmt -> Stmt .
 endfm
 
-
 fmod PROG-LANG-SYNTAX is
   extending ASSIGNMENT-SYNTAX .
   extending BLOCK-SYNTAX .
@@ -73,13 +72,130 @@ fmod PROG-LANG-SYNTAX is
   op _;_ : StmtList Exp -> Pgm .
 endfm
 
-parse
+fmod STATE is protecting INT .
+  sorts Index State .
+  op empty : -> State .
+  op [_,_] : Index Int -> State .
+  op __ : State State -> State [assoc comm id: empty] .
+  op _[_] : State Index -> Int .
+  op _[_<-_] : State Index Int -> State .
+  var X : Index . vars I J : Int . var S : State .
+  eq ([X,I] S)[X] = I .
+  eq ([X,I] S)[X <- J] = [X,J] S .
+  eq S[X <- I] = S [X,I] [owise] .
+endfm
+
+fmod NAME-SEMANTICS is
+  protecting NAME-SYNTAX .
+  protecting STATE .
+  subsort Name < Index .
+  op eval : Name State -> Int .
+  var X : Name . var S : State .
+  eq eval(X, S) = S[X] .
+endfm
+
+
+fmod EXP-SEMANTICS is
+  protecting EXP-SYNTAX .
+  protecting NAME-SEMANTICS .
+  op eval : Exp State -> Int .
+  vars E F : Exp . var I : Int . var S : State .
+  eq eval(I, S) = I .
+  eq eval(E + F, S) = eval(E, S) + eval(F, S) .
+  eq eval(E - F, S) = eval(E, S) - eval(F, S) .
+  eq eval(E * F, S) = eval(E, S) * eval(F, S) .
+  eq eval(E / F, S) = eval(E, S) quo eval(F, S) .
+endfm
+
+fmod GENERIC-STMT-SEMANTICS is
+  protecting GENERIC-STMT-SYNTAX .
+  protecting STATE .
+  op state : Stmt State -> State .
+  eq state(skip, S:State) = S:State .
+endfm
+
+fmod ASSIGNMENT-SEMANTICS is
+  protecting ASSIGNMENT-SYNTAX .
+  extending GENERIC-STMT-SEMANTICS .
+  extending EXP-SEMANTICS .
+  var X : Name . var E : Exp . var S : State .
+  eq state(X = E, S) = S[X <- eval(E,S)] .
+endfm
+
+fmod SEQ-COMP-SEMANTICS is
+  protecting SEQ-COMP-SYNTAX .
+  extending GENERIC-STMT-SEMANTICS .
+  op state : StmtList State -> State .
+  var St : Stmt . var Stl : StmtList .
+  var S : State .
+  eq St Stl = St ; Stl .
+  eq state(St ; Stl, S) = state(Stl, state(St, S)) .
+endfm
+
+fmod BLOCK-SEMANTICS is
+  protecting BLOCK-SYNTAX .
+  extending SEQ-COMP-SEMANTICS .
+  var Stl : StmtList . var S : State .
+  eq state({Stl}, S) = state(Stl, S) .
+endfm
+
+fmod BEXP-SEMANTICS is protecting BEXP-SYNTAX .
+  protecting EXP-SEMANTICS .
+  protecting STATE .
+  op eval : BExp State -> Bool .
+  vars E F : Exp . vars BE BF : BExp .
+  var S : State .
+  eq eval(E equals F, S) = eval(E, S) == eval(F, S) .
+  eq eval(zero?(E), S) = eval(E, S) == 0 .
+  eq eval(even?(E), S) = eval(E, S) rem 2 == 0 .
+  eq eval(not BE, S) = not eval(BE, S) .
+  eq eval(BE and BF, S) = eval(BE, S) and eval(BF, S) .
+endfm
+
+fmod IF-SEMANTICS is
+  protecting IF-SYNTAX .
+  protecting BEXP-SEMANTICS .
+  extending GENERIC-STMT-SEMANTICS .
+  var BE : BExp . vars St St2 : Stmt .
+  var S : State .
+  eq state(if BE then St else St2, S) =
+       if eval(BE, S) then state(St, S)
+                      else state(St2, S) fi .
+endfm
+
+fmod LOOPS-SEMANTICS is
+  protecting LOOPS-SYNTAX .
+  protecting BEXP-SEMANTICS .
+  extending BLOCK-SEMANTICS .
+  vars St St1 St2 St3 : Stmt .
+  var BE : BExp . var S : State .
+  eq for(St1 ; BE ; St2) St3 =
+        St1 ; while BE {St3 ; St2} .
+  eq state(while BE St, S) =
+        if eval(BE, S)
+          then state(while BE St, state(St, S))
+           else S fi .
+endfm
+
+fmod PROG-LANG-SEMANTICS is
+  protecting PROG-LANG-SYNTAX .
+  extending ASSIGNMENT-SEMANTICS .
+  extending BLOCK-SEMANTICS .
+  extending IF-SEMANTICS .
+  extending LOOPS-SEMANTICS .
+  op eval : Pgm -> Int .
+  var Stl : StmtList . var E : Exp .
+  eq Stl E = Stl ; E .
+  eq eval(Stl ; E) = eval(E, state(Stl, empty)) .
+endfm
+
+red eval(
   x = 17 ;
-  y = 100 ;
+  y = 1000 ;
   p = 1 ;
   for(i = y ; not zero?(i) ; i = i - 1) {
     p = p * x
   }
   p
-.
+) .
 
